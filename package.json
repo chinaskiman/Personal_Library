@@ -1,0 +1,35 @@
+{
+  "name": "reading-journal",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Personal reading journal — RTL Persian desktop-first editorial UI",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "node --test \"src/lib/*.test.ts\"",
+    "verify:theme": "node theme-verify.mjs",
+    "verify:ui": "node ui-audit.mjs && node ui-contrast.mjs && node ui-workflow.mjs",
+    "verify:empty": "node ui-empty.mjs && node ui-images.mjs",
+    "verify:images": "node ui-restart.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.50.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@fontsource/cormorant-garamond": "5.3.0",
+    "@fontsource/vazirmatn": "5.3.0",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "24.19.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vite": "8.3.2"
+  }
+}

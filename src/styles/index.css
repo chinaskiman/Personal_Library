@@ -1,0 +1,273 @@
+@import 'tailwindcss';
+@import './fonts.css';
+
+/* ------------------------------------------------------------------ *
+ *  DESIGN TOKENS
+ *  Single source of truth. Every colour, radius, shadow, font and
+ *  layout metric used by the UI resolves back to this block, so the
+ *  whole editorial identity can be re-themed from one place.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* ---- Surfaces & paper ------------------------------------------ */
+  --color-canvas: #f7f4ed; /* main background */
+  --color-canvas-deep: #f2ede3;
+  --color-surface: #efe9df; /* secondary surface / sidebar */
+  --color-surface-raised: #f6f2ea; /* cards lifted off the canvas */
+  --color-surface-sunken: #ebe4d7;
+
+  /* ---- Lines ----------------------------------------------------- */
+  --color-line: #d8cabb; /* borders */
+  --color-line-soft: #e5ddd0;
+  --color-line-strong: #c3b09b;
+
+  /* ---- Accent ---------------------------------------------------- */
+  /* Accent is darkened slightly: it doubles as small text (the required-field
+     marker, the selected chip label), so it has to clear AA as a foreground and
+     not only as a button fill. `accent-strong` moves with it so the hover step
+     stays visible rather than collapsing into the resting colour. */
+  --color-accent: #746149;
+  --color-accent-strong: #5b4a37;
+  --color-accent-soft: #a08b73;
+  --color-accent-wash: #ece3d5;
+
+  /* ---- Text ------------------------------------------------------ */
+  --color-ink: #302a25; /* primary text */
+  /* Secondary and tertiary text are darkened from their original values so they
+     clear WCAG AA (4.5:1) at the small sizes they are used at, while keeping the
+     warm hue and the light-to-dark ordering the layout relies on. */
+  --color-ink-soft: #5f5446;
+  --color-ink-faint: #746655;
+
+  /* ---- Reading status (all desaturated to stay calm) ------------- */
+  --color-status-reading: #826d55;
+  --color-status-finished: #5e7359;
+  --color-status-queued: #8b7c66;
+  --color-status-paused: #9a8b76;
+  --color-status-dropped: #8a5646; /* also used for validation text on forms */
+
+  /* ---- Typography ----------------------------------------------- */
+  --font-sans:
+    'Vazirmatn', 'Segoe UI', system-ui, -apple-system, 'Noto Sans Arabic',
+    sans-serif;
+  --font-serif:
+    'Cormorant Garamond', 'Iowan Old Style', 'Palatino Linotype', Palatino,
+    Georgia, 'Times New Roman', serif;
+
+  /* ---- Radii (restrained, print-like) --------------------------- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* ---- Shadows (soft, warm, never heavy) ------------------------ */
+  --shadow-paper: 0 1px 2px rgb(48 42 37 / 0.04);
+  --shadow-soft:
+    0 1px 2px rgb(48 42 37 / 0.04), 0 6px 18px -12px rgb(48 42 37 / 0.16);
+  --shadow-lift:
+    0 2px 4px rgb(48 42 37 / 0.05), 0 18px 36px -20px rgb(48 42 37 / 0.28);
+  --shadow-cover: 0 2px 4px rgb(48 42 37 / 0.08), 0 14px 26px -16px rgb(48 42 37 / 0.34);
+
+  /* ---- Layout metrics ------------------------------------------- */
+  --spacing-sidebar: 17rem;
+  --spacing-rail: 5rem;
+  --spacing-topbar: 4.75rem;
+  --spacing-gutter: 2.5rem;
+
+  /* ---- Motion ---------------------------------------------------- */
+  --ease-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------ *
+ *  DARK PALETTE
+ * ------------------------------------------------------------------
+ * Tailwind v4 compiles `bg-canvas`, `text-ink` and friends to
+ * `var(--color-canvas)` etc., and emits the `@theme` defaults inside
+ * `@layer theme`. This override therefore sits OUTSIDE any cascade layer: an
+ * unlayered declaration always beats a layered one, whatever the selector
+ * specificity. Inside `@layer base` it would silently lose and dark mode would
+ * appear to do nothing.
+ *
+ * Because every colour in the app resolves through these tokens, re-theming is
+ * a token swap alone — no component changes and no parallel class scheme.
+ *
+ * The palette stays warm and muted rather than neutral grey, preserving the
+ * editorial character of the light theme. Text tokens lighten and surfaces
+ * darken, which keeps the same tonal separation.
+ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces & paper — inverted, but kept on the warm side of neutral. */
+  --color-canvas: #1b1815;
+  --color-canvas-deep: #15120f;
+  --color-surface: #221e1a;
+  --color-surface-raised: #282320;
+  --color-surface-sunken: #100e0c;
+
+  /* Lines */
+  --color-line: #423a33;
+  --color-line-soft: #322c26;
+  --color-line-strong: #5a4f45;
+
+  /* Accent — lightened so it stays legible on dark surfaces. */
+  --color-accent: #c2aa89;
+  --color-accent-strong: #d6c0a1;
+  --color-accent-soft: #8f7c64;
+  --color-accent-wash: #2d2620;
+
+  /* Text */
+  --color-ink: #f0e9df;
+  --color-ink-soft: #b6a897;
+  /* Lightened from the light-theme value: on a dark canvas the muted tone has to
+     come *up* to stay legible, and this keeps the same warm hue. */
+  --color-ink-faint: #9a8c7c;
+
+  /* Reading status — same relative lightness relationships as light. */
+  --color-status-reading: #c2aa89;
+  --color-status-finished: #9cb795;
+  --color-status-queued: #b7a68e;
+  --color-status-paused: #a89a86;
+  --color-status-dropped: #d19485;
+
+  /* Shadows deepen on dark backgrounds to keep the same lifted quality. */
+  --shadow-paper: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 18px -12px rgb(0 0 0 / 0.55);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.35), 0 18px 36px -20px rgb(0 0 0 / 0.65);
+  --shadow-cover: 0 2px 4px rgb(0 0 0 / 0.4), 0 14px 26px -16px rgb(0 0 0 / 0.7);
+}
+
+/* ------------------------------------------------------------------ *
+ *  BASE
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    color-scheme: light;
+    /* sidebar width switches to an icon rail on smaller laptops */
+    --app-sidebar-current: var(--spacing-sidebar);
+  }
+
+  @media (max-width: 1279px) {
+    :root {
+      --app-sidebar-current: 15rem;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    :root {
+      --app-sidebar-current: var(--spacing-rail);
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    /* Persian script needs a generous leading to keep diacritics airy. */
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.5;
+    font-weight: 600;
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--color-accent-wash);
+    color: var(--color-ink);
+  }
+
+  /* A quiet scrollbar that matches the paper. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-line);
+    border-radius: 999px;
+    border: 3px solid var(--color-canvas);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-line-strong);
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  UTILITIES
+ * ------------------------------------------------------------------ */
+
+/*
+ * Bi-directional text helper.
+ * English titles, author names and ISBNs must render LTR and must never
+ * leak their direction into the surrounding Persian copy — `isolate`
+ * creates an independent bidi context for exactly that.
+ */
+@utility ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Vertical writing for the decorative journal rule in the sidebar. */
+@utility rule-vertical {
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-line) 18%,
+    var(--color-line) 82%,
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

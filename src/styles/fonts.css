@@ -1,0 +1,21 @@
+/*
+ * Local font assets (bundled through @fontsource — no external CDN requests,
+ * so typography never depends on the network).
+ *
+ * Vazirmatn  → Persian / Arabic UI text. Loaded with all unicode subsets so that
+ *              mixed Persian + Latin strings shape correctly.
+ * Cormorant → English book titles, author names and editorial headings.
+ */
+
+@import '@fontsource/vazirmatn/300.css';
+@import '@fontsource/vazirmatn/400.css';
+@import '@fontsource/vazirmatn/500.css';
+@import '@fontsource/vazirmatn/600.css';
+@import '@fontsource/vazirmatn/700.css';
+
+@import '@fontsource/cormorant-garamond/latin-300.css';
+@import '@fontsource/cormorant-garamond/latin-400.css';
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-600.css';
+@import '@fontsource/cormorant-garamond/latin-400-italic.css';
+@import '@fontsource/cormorant-garamond/latin-500-italic.css';

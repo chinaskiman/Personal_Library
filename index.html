@@ -1,0 +1,56 @@
+<!doctype html>
+<!--
+  Interface language: Persian (Farsi)
+  Text direction: RTL
+  Change the document language/direction here, and the visual direction of the
+  whole shell follows automatically (see src/styles/index.css).
+-->
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/monogram.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F7F4ED" />
+    <meta
+      name="description"
+      content="دفتر مطالعه — فضایی شخصی و آرام برای نگهداری کتاب‌ها، یادداشت‌ها و نقل‌قول‌ها"
+    />
+    <title>Reading Journal · دفتر مطالعه</title>
+    <script>
+      /*
+       * Apply the stored appearance before the first paint.
+       *
+       * Without this the page would render one frame in the light palette and
+       * then swap, which is very visible on a dark theme. Kept inline and tiny
+       * on purpose — it duplicates a fraction of `lib/theme.ts`, which remains
+       * the source of truth and re-applies the value once React mounts. The
+       * three rules below must stay in step with `parseThemePreference` and
+       * `resolveTheme`: an unrecognised stored value falls back to light, and
+       * only an explicit `system` consults the OS.
+       */
+      ;(function () {
+        try {
+          var stored = window.localStorage.getItem('reading-journal:theme')
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+          var theme =
+            stored === 'dark'
+              ? 'dark'
+              : stored === 'system'
+                ? (prefersDark ? 'dark' : 'light')
+                : 'light'
+          document.documentElement.dataset.theme = theme
+          var meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#1B1815' : '#F7F4ED')
+        } catch (e) {
+          /* storage blocked — the light default in CSS stands */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
